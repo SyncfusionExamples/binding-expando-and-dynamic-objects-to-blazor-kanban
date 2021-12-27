@@ -1,0 +1,27 @@
+﻿@page "/"
+@using System.Dynamic;
+<SfKanban DataSource="@Tasks" KeyField="Status">
+    <KanbanColumns>
+        <KanbanColumn HeaderText="To Do" KeyField="@(new List<string>() {"Open" })"></KanbanColumn>
+        <KanbanColumn HeaderText="In Progress" KeyField="@(new List<string>() {"InProgress" })"></KanbanColumn>
+        <KanbanColumn HeaderText="Testing" KeyField="@(new List<string>() {"Testing" })"></KanbanColumn>
+        <KanbanColumn HeaderText="Done" KeyField="@(new List<string>() {"Close" })"></KanbanColumn>
+    </KanbanColumns>
+    <KanbanCardSettings HeaderField="Id" ContentField="Summary"></KanbanCardSettings>
+</SfKanban>
+
+@code{
+    public List<ExpandoObject> Tasks { get; set; } = new List<ExpandoObject>();
+
+    protected override void OnInitialized()
+    {
+        Tasks = Enumerable.Range(1, 20).Select((x) =>
+        {
+            dynamic d = new ExpandoObject();
+            d.Id = "Task 1000" + x;
+            d.Status = (new string[] { "Open", "In Progress", "Testing", "Close" })[new Random().Next(4)];
+            d.Summary = (new string[] { "Analyze the new requirements gathered from the customer.", "Improve application performance", "Fix the issues reported in the IE browser.", "Validate new requirements", "Test the application in the IE browser." })[new Random().Next(5)];
+            return d;
+        }).Cast<ExpandoObject>().ToList<ExpandoObject>();
+    }
+}
